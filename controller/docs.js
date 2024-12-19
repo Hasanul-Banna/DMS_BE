@@ -154,6 +154,7 @@ exports.getAllDocs = asyncHandler(async (req, res, next) => {
   });
 });
 
+
 exports.uploadTemplates = asyncHandler(async (req, res, next) => {
   const files = req.files;
   if (!files.template_file) {
@@ -300,53 +301,116 @@ const upload = multer({
 });
 
 // POST Route to Upload Document
+// exports.uploadDoc = asyncHandler(async (req, res, next) => {
+//   upload.single("file")(req, res, async (err) => {
+//     if (err) {
+//       return next(new ErrorResponse(err.message, 400));
+//     }
+
+//     if (!req.file) {
+//       return next(new ErrorResponse("Please upload a file", 400));
+//     }
+
+//     const { name, description } = req.body;
+
+//     // Save document to DB
+//     const doc = await Doc.create({
+//       name,
+//       description,
+//       file_path: req.file.path,
+//     });
+
+//     return res.status(201).json({
+//       success: true,
+//       msg: "Document uploaded successfully!",
+//       data: doc,
+//     });
+//   });
+// });
+// POST Route to Upload or Update Document
 exports.uploadDoc = asyncHandler(async (req, res, next) => {
   upload.single("file")(req, res, async (err) => {
     if (err) {
       return next(new ErrorResponse(err.message, 400));
     }
 
-    if (!req.file) {
-      return next(new ErrorResponse("Please upload a file", 400));
+    if (!req.file && !req.body.id) {
+      return next(
+        new ErrorResponse("Please upload a file or provide an ID", 400)
+      );
     }
 
-    const { name, description } = req.body;
+    const { id, name, description } = req.body;
 
-    // Save document to DB
-    const doc = await Doc.create({
-      name,
-      description,
-      file_path: req.file.path,
-    });
+    try {
+      let doc;
 
-    return res.status(201).json({
-      success: true,
-      msg: "Document uploaded successfully!",
-      data: doc,
-    });
+      if (id) {
+        // Find and update the document
+        doc = await Doc.findById(id);
+        console.log({ id, name, description });
+
+        if (!doc) {
+          return next(new ErrorResponse("Document not found", 404));
+        }
+
+        // Update fields only if new values are provided
+        doc.name = name || doc.name;
+        doc.description = description || doc.description;
+        if (req.file) {
+          doc.file_path = req.file.path;
+        }
+
+        await doc.save();
+
+        return res.status(200).json({
+          success: true,
+          msg: "Document updated successfully!",
+          data: doc,
+        });
+      } else {
+        // Create a new document
+        if (!req.file) {
+          return next(new ErrorResponse("Please upload a file", 400));
+        }
+
+        doc = await Doc.create({
+          name,
+          description,
+          file_path: req.file.path,
+        });
+
+        return res.status(201).json({
+          success: true,
+          msg: "Document uploaded successfully!",
+          data: doc,
+        });
+      }
+    } catch (error) {
+      return next(new ErrorResponse(error.message, 500));
+    }
   });
 });
 
 // DELETE Document by ID
 exports.deleteDoc = asyncHandler(async (req, res, next) => {
-    const { id } = req.body;
-  
-    // Validate if id is provided
-    if (!id) {
-      return next(new ErrorResponse("Document ID is required", 400));
-    }
-  
-    // Find and delete the document by ID
-    const deletedDoc = await Doc.findByIdAndDelete(id);
-  
-    if (!deletedDoc) {
-      return next(new ErrorResponse(`No document found with ID: ${id}`, 404));
-    }
-  
-    return res.status(200).json({
-      success: true,
-      msg: "Document deleted successfully!",
-      data: deletedDoc,
-    });
+  const { id } = req.body;
+
+  // Validate if id is provided
+  if (!id) {
+    return next(new ErrorResponse("Document ID is required", 400));
+  }
+
+  // Find and delete the document by ID
+  const deletedDoc = await Doc.findByIdAndDelete(id);
+
+  if (!deletedDoc) {
+    return next(new ErrorResponse(`No document found with ID: ${id}`, 404));
+  }
+
+  return res.status(200).json({
+    success: true,
+    msg: "Document deleted successfully!",
+    data: deletedDoc,
   });
-  
+});

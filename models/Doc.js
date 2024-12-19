@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const docSchema = mongoose.Schema({
     name: {
         type: String,
-        minlength: [5, 'Name cant be less than 5 char'],
+        // minlength: [4, 'Name cant be less than 4 char'],
     },
 
     description: {
