@@ -22,6 +22,7 @@ app.get("/healthcheck", (req, res) => {
 app.use("/api/users", require("./routes/users"));
 app.use("/api/docs", require("./routes/docs"));
 app.use("/api/logo", require("./routes/logo"));
+app.use("/api/microsoft_ad", require("./routes/microsoft_ad"));
 
 app.use(errorHandler);
 app.use('/uploads', express.static('uploads')); // Serve uploaded files as static
