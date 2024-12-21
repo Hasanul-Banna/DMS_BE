@@ -63,10 +63,29 @@ exports.getAllUsers = asyncHandler(async (req, res, next) => {
   return res.status(200).json({
     success: true,
     msg: "Users fetched successfully!",
-    data: users,
+    data: users.reverse(),
   });
 });
 // by Banna
+exports.getUserProfile = asyncHandler(async (req, res, next) => {
+  const { password, email } = req.body;
+
+  // Build query dynamically based on provided filters
+  const query = {};
+  if (email) query.email = email; // Exact match for email
+  if (password) query.password = password; // Exact match for password
+
+  const users = await User.find(query);
+  if (!users || users.length === 0) {
+    return next(new ErrorResponse("No Users Found!", 404));
+  }
+
+  return res.status(200).json({
+    success: true,
+    msg: "Users fetched successfully!",
+    data: users,
+  });
+});
 // Multer Storage Configuration
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {

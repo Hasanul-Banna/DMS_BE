@@ -348,8 +348,6 @@ exports.uploadDoc = asyncHandler(async (req, res, next) => {
       if (id) {
         // Find and update the document
         doc = await Doc.findById(id);
-        console.log({ id, name, description });
-
         if (!doc) {
           return next(new ErrorResponse("Document not found", 404));
         }

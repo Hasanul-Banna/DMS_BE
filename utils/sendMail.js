@@ -25,10 +25,6 @@ async function sendEmail(options) {
     attachments:options.attachments
   }
   const info = await transporter.sendMail(message);
-
-  // console.log("Message sent: %s", message);
-
-  
 }
 
 module.exports = sendEmail;
