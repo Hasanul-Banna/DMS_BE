@@ -4,67 +4,67 @@ const MSADSettingsSchema = mongoose.Schema(
   {
     smtp_server: {
       type: String,
-      required: true,
+      required: false,
     },
     port_number_default_25: {
       type: String,
-      required: true,
+      required: false,
     },
     from_address: {
       type: String,
-      required: true,
+      required: false,
     },
     use_secure_transport: {
       type: String,
-      required: true,
+      required: false,
     },
     use_authentication: {
       type: String,
-      required: true,
+      required: false,
     },
     authentication_user_id: {
       type: String,
-      required: true,
+      required: false,
     },
     authentication_password: {
       type: String,
-      required: true,
+      required: false,
     },
     azure_tenant: {
       type: String,
-      required: true,
+      required: false,
     },
     app_id: {
       type: String,
-      required: true,
+      required: false,
     },
     app_secret: {
       type: String,
-      required: true,
+      required: false,
     },
     client_id: {
       type: String,
-      required: true,
+      required: false,
     },
     start_hour_24h: {
       type: String,
-      required: true,
+      required: false,
     },
     start_minute: {
       type: String,
-      required: true,
+      required: false,
     },
     last_synchronization: {
       type: String,
-      required: true,
+      required: false,
     },
     isActivate: {
       type: Boolean,
-      required: true,
+      required: false,
     },
     isIncludeDomain: {
       type: Boolean,
-      required: true,
+      required: false,
     },
   },
   { timestamps: true }

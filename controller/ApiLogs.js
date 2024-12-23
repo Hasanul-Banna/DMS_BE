@@ -31,7 +31,7 @@ exports.getLogs = asyncHandler(async (req, res, next) => {
 
     const getLogs = await ApiLogsService.find(query)
       .sort({ timestamp: -1 }) // Sort by timestamp in descending order
-      .limit(100); // Limit the result to the latest 100 logs
+      .limit(300); // Limit the result to the latest 100 logs
 
     // if (!getLogs || getLogs.length === 0) {
     //   return next(new ErrorResponse("No logs found!", 404));
