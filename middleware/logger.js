@@ -28,6 +28,7 @@ const logger = async (req, res, next) => {
           // Ignore parsing errors for non-JSON responses
         }
       }
+      console.log(req.body);
 
       // Save the log with only 'success' and 'msg' from the response body
       await Log.create({

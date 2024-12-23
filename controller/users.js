@@ -126,26 +126,26 @@ exports.createNewUser = asyncHandler(async (req, res, next) => {
       return next(new ErrorResponse(err.message, 400));
     }
 
-    if (!req.file && !req.body.id) {
-      return next(
-        new ErrorResponse("Please upload a file or provide an ID", 400)
-      );
-    }
+    // if (!req.file && !req.body.id) {
+    //   return next(
+    //     new ErrorResponse("Please upload a file or provide an ID", 400)
+    //   );
+    // }
 
     const { name, email, password, role } = req.body;
 
     try {
       // Create a new document
-      if (!req.file) {
-        return next(new ErrorResponse("Please upload a file", 400));
-      }
+      // if (!req.file) {
+      //   return next(new ErrorResponse("Please upload a file", 400));
+      // }
 
       doc = await User.create({
         name,
         email,
         password,
         role,
-        imagePath: req.file.path,
+        imagePath: req.file?.path || '',
       });
 
       return res.status(201).json({
