@@ -8,4 +8,5 @@ const templateSchema = new mongoose.Schema({
     // Add other fields as necessary
 });
 
-module.exports = mongoose.model('Template', templateSchema);
+// module.exports = mongoose.model('Template', templateSchema);
+module.exports = Template = mongoose.model('Template', templateSchema)

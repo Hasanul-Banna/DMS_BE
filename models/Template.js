@@ -15,9 +15,8 @@ const templateSchema = mongoose.Schema({
         required: true
     }
 
-
 }, { timestamps: true })
 
 
 
-module.exports = Template = mongoose.model('Template', templateSchema)
+// module.exports = Template = mongoose.model('Template', templateSchema)
