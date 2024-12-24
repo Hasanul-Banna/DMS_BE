@@ -28,14 +28,10 @@ app.use("/api/docs", require("./routes/docs"));
 app.use("/api/logo", require("./routes/logo"));
 app.use("/api/microsoft_ad", require("./routes/microsoft_ad"));
 app.use("/api/logs", require("./routes/ApiLogs"));
-
+app.use('/api', "./routes/documentRoutes");
 app.use(errorHandler);
 app.use("/uploads", express.static("uploads")); // Serve uploaded files as static
-// Logs retrieval API
-// app.get(
-//   "/api/logs",
-  
-// );
+
 app.listen(PORT, () => {
   console.log(
     `Server is running in ${process.env.NODE_ENV} mode on port ${PORT}...`
