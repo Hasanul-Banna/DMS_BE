@@ -183,11 +183,13 @@ exports.generateDocumentFromDB = async (req, res) => {
 
     try {
         const templateDoc = await Doc.findById(templateId);
-        if (!templateDoc || !templateDoc.content) {
+        // console.log(templateDoc.file_path)
+        if (!templateDoc || !templateDoc.file_path) {
             return res.status(404).json({ error: "Template not found or invalid template content." });
         }
-
-        const templateContent = Buffer.from(templateDoc.content, 'base64');
+        // Read the file from the uploads folder
+        const templateContent = await fs.readFile(templateDoc.file_path);
+        // const templateContent = Buffer.from(templateDoc.content, 'base64');
         const documentBuffer = await processTemplate(templateContent, data, outputType);
 
         const contentType =
