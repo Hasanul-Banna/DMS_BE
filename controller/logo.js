@@ -44,24 +44,60 @@ exports.getLogo = asyncHandler(async (req, res, next) => {
   });
 });
 // POST Route to Upload or Update Document
+// exports.updateLogo = asyncHandler(async (req, res, next) => {
+//   upload.single("file")(req, res, async (err) => {
+//     if (err) {
+//       return next(new ErrorResponse(err.message, 400));
+//     }
+//     try {
+//       let doc;
+
+//       if (!req.file) {
+//         return next(new ErrorResponse("Please upload a file", 400));
+//       }
+//       doc = await logo.create({
+//         file_path: req.file.path,
+//       });
+
+//       return res.status(201).json({
+//         success: true,
+//         msg: "Document uploaded successfully!",
+//         data: doc,
+//       });
+//     } catch (error) {
+//       return next(new ErrorResponse(error.message, 500));
+//     }
+//   });
+// });
+// POST Route to Upload or Update Document
 exports.updateLogo = asyncHandler(async (req, res, next) => {
   upload.single("file")(req, res, async (err) => {
     if (err) {
       return next(new ErrorResponse(err.message, 400));
     }
+    
+    if (!req.file) {
+      return next(new ErrorResponse("Please upload a file", 400));
+    }
+
     try {
-      let doc;
+      // Find the existing logo object (assuming only one object exists in the table)
+      let doc = await logo.findOne();
 
-      if (!req.file) {
-        return next(new ErrorResponse("Please upload a file", 400));
+      if (doc) {
+        // Update the existing logo's file path
+        doc.file_path = req.file.path;
+        await doc.save();
+      } else {
+        // If no logo exists, create a new one
+        doc = await logo.create({
+          file_path: req.file.path,
+        });
       }
-      doc = await logo.create({
-        file_path: req.file.path,
-      });
 
-      return res.status(201).json({
+      return res.status(200).json({
         success: true,
-        msg: "Document uploaded successfully!",
+        msg: "Document updated successfully!",
         data: doc,
       });
     } catch (error) {
@@ -69,3 +105,4 @@ exports.updateLogo = asyncHandler(async (req, res, next) => {
     }
   });
 });
+

@@ -24,10 +24,20 @@ const ApiLogsService = require("../models/ApiLogs");
 exports.getLogs = asyncHandler(async (req, res, next) => {
   try {
     // Extract method from query parameters
-    const { method } = req.query;
+    const { method, type } = req.query;
 
     // Build the query object dynamically
-    const query = method ? { method: method.toUpperCase() } : {};
+    const query = {};
+
+    if (method) {
+      query.method = method.toUpperCase();
+    }
+
+    if (type === "Success") {
+      query["responseBody.success"] = true;
+    } else if (type === "Failed") {
+      query["responseBody.success"] = false;
+    }
 
     const getLogs = await ApiLogsService.find(query)
       .sort({ timestamp: -1 }) // Sort by timestamp in descending order
@@ -66,5 +76,3 @@ exports.clearLogs = asyncHandler(async (req, res, next) => {
     return next(new ErrorResponse("Failed to clear logs!", 500));
   }
 });
-
-

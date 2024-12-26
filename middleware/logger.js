@@ -13,12 +13,14 @@ const logger = async (req, res, next) => {
 
       // Extract 'success', 'msg', and 'data.length' if the response body is JSON
       if (typeof body === "object") {
-        success = body.success || false;
+        const isBUffer = Buffer.isBuffer(body);
+        success = body.success || (isBUffer ? true : false);
         msg =
           body.msg ||
           body.error ||
-          "Error Occured while processing your request";
+          (isBUffer ? "Document generated successfully" : "Error Occured while processing your request");
         dataLength = Array.isArray(body.data) ? body.data.length : null;
+        console.log(isBUffer);
       } else {
         try {
           const parsedBody = JSON.parse(body);
